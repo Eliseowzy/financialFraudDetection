@@ -1,5 +1,5 @@
 # financialFraudDetection
-
+![The logo of Enron Corporation](./externalResources/logo.png)
 ```
 Submission of group list:				19 Feb 2021
 Submission of case study briefing:		26 Feb 2021
