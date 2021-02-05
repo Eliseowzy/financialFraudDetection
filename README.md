@@ -1,5 +1,6 @@
 # A Financial Fraud Detection Case based on Enron
 > The work of few bad men or the dark shadow of American dream?[1,2]
+
 ![The logo of Enron Corporation](./externalResources/logo.png)
 ```
 Submission of group list:				19 Feb 2021
