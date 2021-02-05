@@ -1,5 +1,6 @@
 # financialFraudDetection
 > Team Members: Wang Zhiyi, Zhang Siyu, Li Junjie
+> Def: https://www.bilibili.com/video/BV124411V7Zx?p=2&spm_id_from=pageDriver
 > Data Source:
 ```
 Submission of group list:				19 Feb 2021
