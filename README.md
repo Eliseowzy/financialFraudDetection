@@ -9,3 +9,5 @@ Project Report submission:			8 May 2021
 - Team Members: Wang Zhiyi, Zhang Siyu, Li Junjie
 - Def: https://www.bilibili.com/video/BV124411V7Zx?p=2&spm_id_from=pageDriver
 - Data Source:
+  - [Kaggle Enron Dataset](!https://www.kaggle.com/wcukierski/enron-email-dataset)
+- 
