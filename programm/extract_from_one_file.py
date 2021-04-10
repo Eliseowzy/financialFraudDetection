@@ -3,7 +3,6 @@ from os import pardir
 import re
 import pandas as pd
 
-
 cur_df = pd.read_csv('emails_1.csv')
 tmp_df = pd.DataFrame()
 # line_cnt = 0
@@ -31,20 +30,36 @@ for index, row in cur_df.iterrows():
     email_dct["From"] = tmp[11]
     # email address "To"
     receive_list = []
-    cur = 13
-    while tmp[cur] != "Subject:":
-        receive_list.append(tmp[cur])
+    cur = 12
+    if tmp[cur] == "To:":  # There is To: in message
         cur += 1
-        to_address = ' '.join(receive_list)
-        email_dct["To"] = to_address
-    # email subject
-    cur += 1
-    subject_list = []
-    while tmp[cur] != "Mime-Version:":
-        subject_list.append(tmp[cur])
+        while tmp[cur] != "Subject:":
+            receive_list.append(tmp[cur])
+            cur += 1
+        # Then extract email subject
         cur += 1
-        subject = " ".join(subject_list)
-        email_dct["Subject"] = subject
+        subject_list = []
+        while tmp[cur] != "Mime-Version:":
+            subject_list.append(tmp[cur])
+            cur += 1
+            subject = " ".join(subject_list)
+            email_dct["Subject"] = subject
+    elif tmp[cur] != "To:":  # If not, use X-To
+        cur = tmp.index("X-To:")
+        cur += 1
+        while tmp[cur] != "X-cc:":
+            receive_list.append(tmp[cur])
+            cur += 1
+        # Then extract email subject
+        cur = 13
+        subject_list = []
+        while tmp[cur] != "Mime-Version:":
+            subject_list.append(tmp[cur])
+            cur += 1
+            subject = " ".join(subject_list)
+            email_dct["Subject"] = subject
+    to_address = ' '.join(receive_list)
+    email_dct["To"] = to_address
     # email X-cc
     cc_list = []
     cur = tmp.index("X-cc:") + 1
