@@ -1,3 +1,10 @@
+"""
+Email message extract module.
+Author: Zhiyi Wang
+Date: 04-11-2021
+Version: 1.0
+"""
+
 import pandas as pd
 
 
@@ -94,5 +101,3 @@ def extract_emails(input_email_data_frame):
         email_dct['Text'] = text
         email_df = email_df.append(email_dct, ignore_index=True)
     return email_df
-    # tmp_df.to_csv('{}{}'.format(target_folder, csv_file_name), index=False)
-    # tmp_df.to_excel('./data/email_split/emails_1.xlsx', index=False)

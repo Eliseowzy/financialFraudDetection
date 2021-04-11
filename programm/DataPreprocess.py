@@ -1,10 +1,16 @@
+"""
+Data pre-process module.
+Author: Zhiyi Wang
+Date: 04-11-2021
+Version: 1.0
+"""
+
 import pandas as pd
 import os
 import re
 import EmailExtract as email_extract
 
-""" This is data process module
-"""
+# Global set
 # Original data frame
 df_original = None
 # Total email number: 517401
@@ -16,6 +22,14 @@ file_count = 1
 
 
 def split_data(file_name=None):
+    """
+    split the original data set
+    Args:
+        file_name: the path of original downloaded from data source
+    Returns:
+        None
+
+    """
     global df_original
     global emails_count
     global emails_count_in_file
@@ -88,15 +102,3 @@ def build_corpus():
         print(file)
     return None
 
-
-def main():
-    # split_data('./data/emails.csv')
-    # split_data('./data/emails.csv')
-    # extract_message_id()
-    # convert_email()
-
-    build_corpus()
-
-
-if __name__ == '__main__':
-    main()
