@@ -10,7 +10,7 @@ import wordcloud
 import re 
 from collections import Counter
 import heapq
-# import matplotlib.pyplot as plt
+
 
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
@@ -22,6 +22,14 @@ from nltk.tokenize import word_tokenize
 
 
 def create_word_cloud():
+    """
+    Build and store a word cloud as .png file.
+    You should set input_path and output_path firstly.
+    
+    Returns:
+        None
+        
+    """
     input_path = r'./data/email_corpus/'
     output_path = r'./data/word_cloud/'
     
@@ -31,20 +39,62 @@ def create_word_cloud():
     
     # get word frenquencies
     words_fren = get_word_fren(hash_path_list)
+    
+    # create a word cloud with 100 words
     word_cloud = wordcloud.WordCloud(width=1000, height=700, background_color='white', font_path='msyh.ttc', max_words=100).fit_words(words_fren)
     word_cloud.to_file(output_path  + 'word_cloud_pic.png')
     
-    # plt.imshow(wordcloud)
-    # plt.axis("off")
-    # plt.imshow()
     return None
+
+def more_test_cloudword(word_number):
+    output_path = r'./data/word_cloud/'
+    # the address of word hash files
+    hashFileDir = r'./data/word_hash/'
+    hash_path_list = []
+    for i in range(1, 101):
+        hash_path_list.append(hashFileDir + str(i) + '.txt')
+    # get word frenquencies
+    words_fren = get_word_fren(hash_path_list)
+    
+    # create a word cloud with 100 words
+    word_cloud = wordcloud.WordCloud(width=1000, height=700, background_color='white', font_path='msyh.ttc', max_words=100).fit_words(words_fren)
+    word_cloud.to_file(output_path  + 'word_cloud_pic' + '_for' + str(word_number) +'.png')
+    return None
+
+def output_word_frequencies(word_number):
+    output_path = r'./data/word_cloud/'
+    
+    # the address of word hash files
+    hashFileDir = r'./data/word_hash/'
+    hash_path_list = []
+    for i in range(1, 101):
+        hash_path_list.append(hashFileDir + str(i) + '.txt')
+
+    results = get_word_fren(hash_path_list)
+        
+    output_word_freq_file = open(output_path + 'word_frequencies' + '_for' + str(word_number) +'.txt', 'w')  
+    for item in results.most_common(word_number):
+        output_word_freq_file.write(' '.join(str(s) for s in item) + '\n')
+    output_word_freq_file.close()       
+    return None    
+    
+    
+    
     
 def create_hash_file(input_path):
-    # the result of word hash
-    tempDir = r'./data/word_hash/'
+    """
+    Create 100 .txt files that hash the same words to the same .txt file 
+    You should set tempDir firstly.
+    Args:
+        input_path: address of corpus file
+    Returns:
+        word_hash_path: all address of word hash files
+        
+
+    """
     
-    # transfer sentences to lists
-    pattern = re.compile(r'\w+')
+    # the address of word hash files
+    tempDir = r'./data/word_hash/'
     
     # Import default stop words set
     stop_words = set(stopwords.words('english'))
@@ -66,15 +116,17 @@ def create_hash_file(input_path):
     custom_words = set(custom_words)
     stop_words = stop_words.union(custom_words)
     
+    # transfer sentences to lists
+    pattern = re.compile(r'\w+')
+    
+    # create .txt files for word hash
     temp_path_list = []
     for i in range(1,101):
         temp_path_list.append(open(tempDir + str(i) + '.txt', mode='w'))
-        
+    # wirte the same words to the same .txt file     
     for file in os.listdir(input_path):
         with open(input_path + file, 'r') as f:
             tmp = f.read()
-            # # Remove the stop words
-            # tmp = remove_stop_words(tmp)
             words_list = pattern.findall(tmp)
             for word in words_list:
                 if len(word) >= 2 and len(word) <= 20 :
@@ -85,37 +137,37 @@ def create_hash_file(input_path):
     for f in temp_path_list:
        f.close()
        
+    # get address str   
     word_hash_path = []
     for i in range(1, 101):
         word_hash_path.append(tempDir + str(i) + '.txt')
     return word_hash_path
 
 def get_word_fren(hash_path_list):
+    """
+    count number of each word
+    Args:
+        hash_path_list: all address of word hash files
+    Returns:
+        results: Frequncies of words
+        
+
+    """   
     results = Counter()
     # words_fren_100 = Counter()
     for file in hash_path_list:
         with open(file, 'r') as f:
             words_list = f.readlines()
             words_list = list(map(lambda x: x.strip('\n'),words_list))
-            word_count = Counter(words_list)
-            results.update(word_count)
+            # word_count = Counter(words_list)
+            results.update(words_list)
             # print(results)
     # words_fren_list = list(results.keys())
     # words_fren_list_100 = heapq.nlargest(100, results, key = lambda x:x[1])
     
     return results
 
-# def test():
-#     tempDir = r'./data/word_hash/'
-#     output_path = r'./data/word_cloud/'
-#     temp_path_list = []
-#     for i in range(1,101):
-#         temp_path_list.append(tempDir + str(i) + '.txt')
-#     words_fren_list_100 = get_word_fren(temp_path_list)
-#     # print(words_fren_list_100)
-#     word_cloud = wordcloud.WordCloud(width=1000, height=700, background_color='white', font_path='msyh.ttc', max_words=100).fit_words(words_fren_list_100)
-#     word_cloud.to_file(output_path  + 'word_cloud_pic.png')
-#     return None
+
 
     
 
