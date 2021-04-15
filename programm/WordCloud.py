@@ -37,17 +37,17 @@ def create_word_cloud():
     hash_path_list = create_hash_file(input_path)
 
     # get word frequencies
-    words_fren = get_word_fren(hash_path_list)
+    words_frequency = get_word_frequency(hash_path_list)
 
     # create a word cloud with 100 words
     word_cloud = wordcloud.WordCloud(width=1000, height=700, background_color='white', font_path='msyh.ttc',
-                                     max_words=100).fit_words(words_fren)
+                                     max_words=100).fit_words(words_frequency)
     word_cloud.to_file(output_path + 'word_cloud_pic.png')
 
     return None
 
 
-def more_test_cloudword(word_number):
+def more_test_cloud_word(word_number):
     output_path = r'./data/word_cloud/'
     # the address of word hash files
     hashFileDir = r'./data/word_hash/'
@@ -55,11 +55,11 @@ def more_test_cloudword(word_number):
     for i in range(1, 101):
         hash_path_list.append(hashFileDir + str(i) + '.txt')
     # get word frequencies
-    words_fren = get_word_fren(hash_path_list)
+    word_frequency = get_word_frequency(hash_path_list)
 
     # create a word cloud with 100 words
     word_cloud = wordcloud.WordCloud(width=1000, height=700, background_color='white', font_path='msyh.ttc',
-                                     max_words=100).fit_words(words_fren)
+                                     max_words=100).fit_words(word_frequency)
     word_cloud.to_file(output_path + 'word_cloud_pic' + '_for' + str(word_number) + '.png')
     return None
 
@@ -73,7 +73,7 @@ def output_word_frequencies(word_number):
     for i in range(1, 101):
         hash_path_list.append(hashFileDir + str(i) + '.txt')
 
-    results = get_word_fren(hash_path_list)
+    results = get_word_frequency(hash_path_list)
 
     output_word_freq_file = open(output_path + 'word_frequencies' + '_for' + str(word_number) + '.txt', 'w')
     for item in results.most_common(word_number):
@@ -124,7 +124,7 @@ def create_hash_file(input_path):
     temp_path_list = []
     for i in range(1, 101):
         temp_path_list.append(open(tempDir + str(i) + '.txt', mode='w'))
-    # wirte the same words to the same .txt file     
+    # write the same words to the same .txt file
     for file in os.listdir(input_path):
         with open(input_path + file, 'r') as f:
             tmp = f.read()
@@ -145,18 +145,18 @@ def create_hash_file(input_path):
     return word_hash_path
 
 
-def get_word_fren(hash_path_list):
+def get_word_frequency(hash_path_list):
     """
     count number of each word
     Args:
         hash_path_list: all address of word hash files
     Returns:
-        results: Frequncies of words
+        results: Frequencies of words
         
 
     """
     results = Counter()
-    # words_fren_100 = Counter()
+    # words_frequency_100 = Counter()
     for file in hash_path_list:
         with open(file, 'r') as f:
             words_list = f.readlines()
@@ -164,8 +164,8 @@ def get_word_fren(hash_path_list):
             # word_count = Counter(words_list)
             results.update(words_list)
             # print(results)
-    # words_fren_list = list(results.keys())
-    # words_fren_list_100 = heapq.nlargest(100, results, key = lambda x:x[1])
+    # words_frequency_list = list(results.keys())
+    # words_frequency_list_100 = heapq.nlargest(100, results, key = lambda x:x[1])
 
     return results
 
