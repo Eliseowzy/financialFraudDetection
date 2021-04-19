@@ -28,13 +28,13 @@ Project Report submission:			8 May 2021
 - `word_hash`:
 - `word_list`:
 ### Community Detection
-- `email_communities`
-  - `unweighted`
-    - `visualization`:
-      - `gexf_files`: graph stored in `.gexf` format.
-      - `gml_files`: graph stored in `.mgl` format.
-      - `imgs`: community detection digrams.
-   - `weighted`
+#### `email_communities`
+- `unweighted`
+  - `gexf_files`: graph stored in `.gexf` format.
+  - `gml_files`: graph stored in `.mgl` format.
+  - `visualization`: community detection pictures.
+- `weighted`: not in use yet
+### Email Content Emotion Analysis
 - `email_corpus`: store the corpus of email content in `.txt` format.
     - each file stores 10,000 emails, the last one stores 9,999 emails.
 - `email_corpus_by_person`: store the corpus by person, each file name represents an email send address.
