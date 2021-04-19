@@ -74,7 +74,7 @@ def clean_graph_data():
     return None
 
 
-def filter_graph_nodes(min_degree):
+def filter_graph_nodes(min_degree, max_degree):
     input_path = r'./data/email_graph/unweighted_clean_data/'
     G = nx.Graph()
     for i in os.listdir(input_path):
@@ -96,6 +96,8 @@ def filter_graph_nodes(min_degree):
     for node in G.nodes:
         if G.degree(node) < min_degree:
             nodes_removed.append(node)
+        if G.degree(node) > max_degree:
+            nodes_removed.append(node)
     G.remove_nodes_from(nodes_removed)
     nodes_zero_degree = []
     for node in G.nodes:
@@ -105,30 +107,30 @@ def filter_graph_nodes(min_degree):
     return G
 
 
-def detect_community_unweighted(min_degree=120):
+def detect_community_unweighted(min_degree=120, max_degree=500):
     """
     Detect communities from unweighted graph
     Returns:
 
     """
-    G = filter_graph_nodes(min_degree)
+    G = filter_graph_nodes(min_degree, max_degree)
     # compute the best partition
     partition = community_louvain.best_partition(G)
     draw_communities(G, partition)
     return None
 
 
-def output_gexf_file(graph_type, min_degree):
-    G = filter_graph_nodes(min_degree=min_degree)
-    nx.write_gexf(G, r'.\data\email_communities\visualization\gexf_files\{}_min_degree_{}.gexf'.format(graph_type,
-                                                                                                       min_degree))
+def output_gexf_file(graph_type, min_degree, max_degree):
+    G = filter_graph_nodes(min_degree=min_degree, max_degree=max_degree)
+    nx.write_gexf(G, r'.\data\email_communities\visualization\gexf_files\{}_min_degree_{}_max_degree_{}.gexf'.format(
+        graph_type, min_degree, max_degree))
     return None
 
 
-def output_gml_file(graph_type, min_degree):
-    G = filter_graph_nodes(min_degree=min_degree)
-    nx.write_gml(G, r'.\data\email_communities\visualization\gml_files\{}_min_degree_{}.gml'.format(graph_type,
-                                                                                                    min_degree))
+def output_gml_file(graph_type, min_degree, max_degree):
+    G = filter_graph_nodes(min_degree=min_degree, max_degree=max_degree)
+    nx.write_gml(G, r'.\data\email_communities\visualization\gml_files\{}_min_degree_{}_max_degree{}.gml'.format(
+        graph_type, min_degree, max_degree))
     return None
 
 
@@ -151,8 +153,9 @@ def main():
     # build_email_graph()
 
     # detect_community_unweighted(min_degree=100)
-    # output_gexf_file(graph_type="unweighted",min_degree=100)
-    output_gml_file(graph_type="unweighted", min_degree=100)
+    # output_gexf_file(graph_type="unweighted",min_degree=80)
+    output_gexf_file(graph_type="unweighted", min_degree=200, max_degree=300)
+    # output_gml_file(graph_type="unweighted", min_degree=100)
 
 
 if __name__ == '__main__':
