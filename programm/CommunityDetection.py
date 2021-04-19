@@ -1,3 +1,10 @@
+"""
+Community Detection module.
+Author: Zhiyi Wang
+Date: 04-20-2021
+Version: 1.1
+"""
+
 import pandas as pd
 import os
 import community as community_louvain
@@ -122,19 +129,28 @@ def detect_community_unweighted(min_degree=120, max_degree=500):
 
 def output_gexf_file(graph_type, min_degree, max_degree):
     G = filter_graph_nodes(min_degree=min_degree, max_degree=max_degree)
-    nx.write_gexf(G, r'.\data\email_communities\visualization\gexf_files\{}_min_degree_{}_max_degree_{}.gexf'.format(
-        graph_type, min_degree, max_degree))
+    nx.write_gexf(G, r'.\data\email_communities\{}\visualization\gexf_files\{}_min_degree_{}_max_degree_{}.gexf'.format(
+        graph_type, graph_type, min_degree, max_degree))
     return None
 
 
 def output_gml_file(graph_type, min_degree, max_degree):
     G = filter_graph_nodes(min_degree=min_degree, max_degree=max_degree)
-    nx.write_gml(G, r'.\data\email_communities\visualization\gml_files\{}_min_degree_{}_max_degree{}.gml'.format(
-        graph_type, min_degree, max_degree))
+    nx.write_gml(G, r'.\data\email_communities\{}\visualization\gml_files\{}_min_degree_{}_max_degree{}.gml'.format(
+        graph_type, graph_type, min_degree, max_degree))
     return None
 
 
 def draw_communities(G, partition):
+    """
+    Draw a graph with community detection result.
+    Args:
+        G: a graph
+        partition: the result of community detection
+
+    Returns:
+
+    """
     # draw the graph
     pos = nx.spring_layout(G)
     # color the nodes according to their partition
@@ -146,17 +162,3 @@ def draw_communities(G, partition):
     plt.show()
     # print(G.edges)
     return None
-
-
-def main():
-    # clean_graph_data()
-    # build_email_graph()
-
-    # detect_community_unweighted(min_degree=100)
-    # output_gexf_file(graph_type="unweighted",min_degree=80)
-    output_gexf_file(graph_type="unweighted", min_degree=200, max_degree=300)
-    # output_gml_file(graph_type="unweighted", min_degree=100)
-
-
-if __name__ == '__main__':
-    main()
