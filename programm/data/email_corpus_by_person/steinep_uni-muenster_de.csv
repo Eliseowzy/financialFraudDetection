@@ -1,0 +1,2 @@
+Message_id,From,Time_stamp,Text
+<1888960.1075841472153.JavaMail.evans@thyme>,steinep@uni-muenster.de,2002-02-04 03:35:08,Re R Passing parameters with Rcmd BATCH Cc PST Dear Prof Ripley thanks for your answer This might be useful for other novices Something like Rterm restore save inputR out COL does the job In inputR co asnumericSysgetenvCOL But commandArgs works as well for Rterm Regards Petra Steiner rhelp mailing list Read hornikRRFAQhtml Send info help or unsubscribe in the body not the subject To 
