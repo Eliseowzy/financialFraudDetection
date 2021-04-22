@@ -39,10 +39,14 @@ wordInfoGen <- function(text, stopwords, dictionary){
   
   # Intersect characters
   intersect_char <- intersect(clean_text, dictionary)
-  intersect_char <- data.frame(table(intersect_char))
-  names(intersect_char) <- c("words", "match")
+  if (length(intersect_char) > 0){
+    intersect_char <- data.frame(table(intersect_char))
+    names(intersect_char) <- c("words", "match")
+    words_info <- merge(wordsFreq, intersect_char, by="words", all=T)
+  } else {
+    words_info <- cbind(wordsFreq, match=rep(0, times=nrow(wordsFreq)))
+  }
   
-  words_info <- merge(wordsFreq, intersect_char, by="words", all=T)
   words_info[is.na(words_info)] <- 0
   result[[1]] <- nrow(intersect_char)
   result[[2]] <- words_info
@@ -106,32 +110,38 @@ for (d in 1:length(data_list)){
     text <- c(text, data[i,"Text"])
   }
   text <- paste(text, collapse = " ")
-  text
   freq_res <- wordInfoGen(text, stopwords, dictionary)
-  freq_res
   freq_res_df <- freq_res[[2]]
   match_word_df <- freq_res_df[which(freq_res_df$match > 0),]
-  match_word_amt <- sum(match_word_df$freq)
+  match_word_amt <- freq_res[[1]]
   match_amt <- c(match_amt, match_word_amt)
 }
 match_amt
 email_match <- as.data.frame(cbind(file_list, match_amt))
 email_match$match_amt <- as.integer(email_match$match_amt)
 email_match[order(-email_match$match_amt),]
-email_match[which(email_match$file_list=="kevin_hannon_enron_com.csv"),]
+email_match
 
-data <- data.frame(data_list[[455]])
-n <- nrow(data)
-text <- c()
-a <-
-for (i in 1:n){
-  text <- c(text, data[i,"Text"])
+# Single Test
+d <- read.csv(file_list[441])
+t <- c()
+for (i in 1:nrow(d)){
+  t <- c(t, d[i, "Text"])
 }
-text <- paste(text, collapse = " ")
-text
-freq_res <- wordInfoGen(text, stopwords, dictionary)
-freq_res
-freq_res_df <- freq_res[[2]]
-match_word_df <- freq_res_df[which(freq_res_df$match > 0),]
-match_word_amt <- sum(match_word_df$freq)
-a <- c(a, match_word_amt)
+t <- paste(t, collapse = " ")
+freq_res <- wordInfoGen(t, stopwords, dictionary)[[2]]
+freq_res[which(freq_res$match==1),]
+wordInfoGen(t, stopwords, dictionary)[[1]]
+
+a <- c("a", "b", "c")
+b <- c("a", "b", "d")
+intersect_char <- intersect(a, b)
+length(intersect_char)==0
+if (length(intersect_char)==0){
+  intersect_char <- data.frame(intersect_char="none", Freq=0)
+} else {
+  intersect_char <- data.frame(table(intersect_char))
+}
+intersect_char
+intersect_char <- cbind(intersect_char, newlist=rep(0, times=nrow(intersect_char)))
+intersect_char
