@@ -1,0 +1,137 @@
+library(rJava)
+library(Rwordseg)
+library(tm)
+library(stylo)
+
+
+# ============================================
+# ========== Self-defined Functions ==========
+# ============================================
+wordInfoGen <- function(text, stopwords, dictionary){
+  result <- list()
+  text <- tolower(text)
+  text = gsub("'s"," is ", text)
+  text = gsub("'s"," is ", text)
+  text = gsub(";"," ", text)
+  text = gsub(","," ", text)
+  text = gsub("'"," ", text)
+  text = gsub(":"," ", text)
+  text = gsub("-"," ", text)
+  text = gsub("`"," ", text)
+  text = gsub("\n"," ", text)
+  text = gsub('\"'," ", text, fixed = TRUE)
+  text = gsub("?"," ", text, fixed = TRUE)
+  text = gsub("*"," ", text, fixed = TRUE)
+  text = gsub("."," ", text, fixed = TRUE)
+  
+  # Remove stop words
+  docs <- Corpus(VectorSource(text))
+  docs <- tm_map(docs, removePunctuation)
+  docs <- tm_map(docs, removeWords, stopwords('english'))
+  docs_res <- strsplit(x=docs$content, split=" ")
+  clean_text <- delete.stop.words(docs_res, stop.words=stopwords)
+  clean_text <- lapply(clean_text, function(z){z[!is.na(z) & z!= ""]})
+  clean_text <- as.vector(unlist(clean_text))
+  
+  wordsFreq <- data.frame(table(clean_text))
+  wordsFreq <- wordsFreq[which(nchar(as.vector(wordsFreq$clean_text)) < 25),]
+  names(wordsFreq) <- c("words", "freq")
+  
+  # Intersect characters
+  intersect_char <- intersect(clean_text, dictionary)
+  intersect_char <- data.frame(table(intersect_char))
+  names(intersect_char) <- c("words", "match")
+  
+  words_info <- merge(wordsFreq, intersect_char, by="words", all=T)
+  words_info[is.na(words_info)] <- 0
+  result[[1]] <- nrow(intersect_char)
+  result[[2]] <- words_info
+  return(result)
+}
+
+# ============================================
+# ================ Code Start ================
+# ============================================
+# file_list <- list.files("E:\\RProj\\project\\financialFraudDetection\\programm\\data\\test")
+# setwd("E:\\RProj\\project\\financialFraudDetection\\programm\\data\\test")
+file_list <- list.files("E:\\RProj\\project\\financialFraudDetection\\programm\\data\\email_corpus_by_alphabet\\k")
+setwd("E:\\RProj\\project\\financialFraudDetection\\programm\\data\\email_corpus_by_person")
+file_list <- file_list[grepl("^[a-z]", file_list)]
+file_list
+stopwords <- readLines("E:\\RProj\\project\\financialFraudDetection\\programm\\data\\stopwords\\stopword.txt")
+stopwords = strsplit(x=stopwords, split=", ")
+stopwords <- as.vector(unlist(stopwords))
+typeof(stopwords)
+dictionary <- readLines("E:\\RProj\\project\\financialFraudDetection\\programm\\data\\word_list\\dictionary_words.txt")
+dictionary <- strsplit(x=dictionary, split=", ")
+dictionary <- as.vector(unlist(dictionary))
+dictionary <- tolower(dictionary)
+dictionary
+
+n <- 1
+data_list <- list()
+for (i in file_list){
+  data <- read.csv(i)
+  data_list[[n]] <- data
+  n <- n + 1
+}
+
+length(data_list)
+
+# ============================================
+# ========== Simple Version Testing ==========
+# ============================================
+data <- data.frame(data_list[[1]])
+nrow(data)
+text <- data[1, "Text"]
+res <- wordInfoGen(text)
+res
+
+# ============================================
+# ========== Person Version Testing ==========
+# ============================================
+match_amt <- c()
+
+data_row_amt <- c()
+for (d in 1:length(data_list)){
+  data <- data.frame(data_list[[d]])
+  data_row_amt <- c(data_row_amt, nrow(data))
+}
+
+for (d in 1:length(data_list)){
+  data <- data.frame(data_list[[d]])
+  n <- nrow(data)
+  text <- c()
+  for (i in 1:n){
+    text <- c(text, data[i,"Text"])
+  }
+  text <- paste(text, collapse = " ")
+  text
+  freq_res <- wordInfoGen(text, stopwords, dictionary)
+  freq_res
+  freq_res_df <- freq_res[[2]]
+  match_word_df <- freq_res_df[which(freq_res_df$match > 0),]
+  match_word_amt <- sum(match_word_df$freq)
+  match_amt <- c(match_amt, match_word_amt)
+}
+match_amt
+email_match <- as.data.frame(cbind(file_list, match_amt))
+email_match$match_amt <- as.integer(email_match$match_amt)
+email_match[order(-email_match$match_amt),]
+email_match[which(email_match$file_list=="kevin_hannon_enron_com.csv"),]
+
+data <- data.frame(data_list[[455]])
+n <- nrow(data)
+text <- c()
+a <-
+for (i in 1:n){
+  text <- c(text, data[i,"Text"])
+}
+text <- paste(text, collapse = " ")
+text
+freq_res <- wordInfoGen(text, stopwords, dictionary)
+freq_res
+freq_res_df <- freq_res[[2]]
+match_word_df <- freq_res_df[which(freq_res_df$match > 0),]
+match_word_amt <- sum(match_word_df$freq)
+a <- c(a, match_word_amt)
