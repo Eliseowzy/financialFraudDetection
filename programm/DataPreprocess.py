@@ -1,15 +1,14 @@
 """
 Data pre-process module.
 Author: Zhiyi Wang
-Date: 04-20-2021
-Version: 1.1
+Date: 04-23-2021
+Version: 1.3
 """
 
 import pandas as pd
 import os
 import re
 import EmailExtract as email_extract
-
 import datetime
 
 # Global set
@@ -188,3 +187,54 @@ def build_corpus_by_person():
             person_email = person_email.append(new_email, ignore_index=True)
         name = convert_address_to_filename(name)
         person_email.to_csv(output_path + name + '.csv', index=False)
+
+
+def build_selected_person_email_corpus():
+    """
+    Build email corpus by selected persons
+    Returns:
+        None
+    """
+    # email book contains email address, first name, last name, status, etc.
+    email_book = pd.read_excel(r'./data/email_book.xlsx', header=0, names=None)
+    # probable emails' directory
+    email_corpus_by_person_directory = './data/email_corpus_by_person/'
+    # all probable emails set
+    email_list = [i for i in os.listdir()]
+    # for each person
+    for _, person in email_book.iterrows():
+        first_name = person[0]
+        last_name = person[1]
+        # store the person's email temporarily
+        person_email_corpus = pd.DataFrame(
+            columns=["FirstName", "LastName", "MessageId", "From", "Time_stamp", "Text", "Ordner", "Status"])
+        # for each person's email
+        for i in range(2, 6):
+            person_email = person[i]
+            # if this person has no email address, continue
+            if pd.isna(person_email):
+                continue
+            # get the file name
+            email_file = convert_address_to_filename(person_email) + ".csv"
+            # if the file not in the probable email set, continue
+            if email_file not in email_list:
+                continue
+            # read email as a dataframe
+            email_file = pd.read_csv(email_corpus_by_person_directory + email_file)
+            # for this person's emails
+            for _, email in email_file.iterrows():
+                # extract some useful information
+                message_id = email[0]
+                from_address = email[1]
+                time_stamp = email[2]
+                text = email[3]
+                # build a new email dictionary
+                new_email = {'FirstName': first_name, 'LastName': last_name, 'MessageId': message_id,
+                             'From': from_address,
+                             'Time_stamp': time_stamp, 'Text': text, 'Ordner': person[6], 'Status': person[7]}
+                # append to the person's temporary email set
+                person_email_corpus = person_email_corpus.append(new_email, ignore_index=True)
+        # load the person's email
+        person_email_corpus.to_csv(
+            "./data/email_corpus_by_selected_person/{}".format(first_name + "_" + last_name + '.csv'), index=False)
+        return None
