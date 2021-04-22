@@ -35,6 +35,8 @@ Project Report submission:			8 May 2021
   - `visualization`: community detection pictures.
 - `weighted`: not in use yet
 ### Email Content Emotion Analysis
+- `email_book.xlsx`: store the persons' email address and name.
+- `email_corpus_by_selected_person`: sotre the above persons' email address, email content, name, time stamp, status, etc.
 - `email_corpus`: store the corpus of email content in `.txt` format.
     - each file stores 10,000 emails, the last one stores 9,999 emails.
 - `email_corpus_by_person`: store the corpus by person, each file name represents an email send address.
