@@ -113,7 +113,7 @@ for (d in 1:length(data_list)){
   freq_res <- wordInfoGen(text, stopwords, dictionary)
   freq_res_df <- freq_res[[2]]
   match_word_df <- freq_res_df[which(freq_res_df$match > 0),]
-  match_word_amt <- freq_res[[1]]
+  match_word_amt <- sum(match_word_df$freq)
   match_amt <- c(match_amt, match_word_amt)
 }
 match_amt
@@ -123,15 +123,18 @@ email_match[order(-email_match$match_amt),]
 email_match
 
 # Single Test
-d <- read.csv(file_list[441])
+file_list[43]
+d <- read.csv(file_list[43])
 t <- c()
 for (i in 1:nrow(d)){
   t <- c(t, d[i, "Text"])
 }
 t <- paste(t, collapse = " ")
-freq_res <- wordInfoGen(t, stopwords, dictionary)[[2]]
-freq_res[which(freq_res$match==1),]
+s_freq_res <- wordInfoGen(t, stopwords, dictionary)[[2]]
+s_freq_res[which(s_freq_res$match==1),]
 wordInfoGen(t, stopwords, dictionary)[[1]]
+
+# "karen_burke_enron_com.csv", karen_buckley_enron_com.csv
 
 a <- c("a", "b", "c")
 b <- c("a", "b", "d")
