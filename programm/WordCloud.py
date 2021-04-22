@@ -72,9 +72,7 @@ def output_word_frequencies(word_number):
     hash_path_list = []
     for i in range(1, 101):
         hash_path_list.append(hashFileDir + str(i) + '.txt')
-
     results = get_word_frequency(hash_path_list)
-
     output_word_freq_file = open(output_path + 'word_frequencies' + '_for' + str(word_number) + '.txt', 'w')
     for item in results.most_common(word_number):
         output_word_freq_file.write(' '.join(str(s) for s in item) + '\n')
@@ -90,13 +88,9 @@ def create_hash_file(input_path):
         input_path: address of corpus file
     Returns:
         word_hash_path: all address of word hash files
-        
-
     """
-
     # the address of word hash files
     tempDir = r'./data/word_hash/'
-
     # Import default stop words set
     stop_words = set(stopwords.words('english'))
     # Add some words you what to remove
@@ -116,10 +110,8 @@ def create_hash_file(input_path):
                     ]
     custom_words = set(custom_words)
     stop_words = stop_words.union(custom_words)
-
     # transfer sentences to lists
     pattern = re.compile(r'\w+')
-
     # create .txt files for word hash
     temp_path_list = []
     for i in range(1, 101):
@@ -152,8 +144,6 @@ def get_word_frequency(hash_path_list):
         hash_path_list: all address of word hash files
     Returns:
         results: Frequencies of words
-        
-
     """
     results = Counter()
     # words_frequency_100 = Counter()
@@ -178,7 +168,6 @@ def remove_stop_words(text):
 
     Returns:
         res: the piece of corpus without stop words
-
     """
     # Import default stop words set
     stop_words = set(stopwords.words('english'))

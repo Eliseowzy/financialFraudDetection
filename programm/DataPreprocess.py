@@ -1,8 +1,8 @@
 """
 Data pre-process module.
 Author: Zhiyi Wang
-Date: 04-11-2021
-Version: 1.0
+Date: 04-20-2021
+Version: 1.1
 """
 
 import pandas as pd
@@ -66,6 +66,7 @@ def convert_email():
     for cnt in range(1, 52):
         cur_df = pd.read_csv(
             './data/split_1/emails_{}.csv'.format(cnt))
+        # Extract the structured email data from an unstructured email text
         email_df = email_extract.extract_emails(cur_df)
         email_df.to_csv('./data/email_split/emails_{}.csv'.format(cnt), index=False)
         print("File {} succeed!".format(cnt))
@@ -74,6 +75,14 @@ def convert_email():
 
 
 def clean_email_content(email_content):
+    """
+    Clean the content of an email
+    Args:
+        email_content: the string of the raw email content
+    Returns:
+        cleaned email string
+
+    """
     tmp = str(email_content)
     # remove email address in Text
     tmp = re.sub(r"[a-zA-Z0-9.\-+_]+@[a-z0-9.\-+_]+\.[a-z]+", '', tmp)
@@ -94,10 +103,9 @@ def clean_email_content(email_content):
 
 def convert_time_stamp(time_stamp):
     """
-
+    Convert the format of data stamp into the regular one.
     Args:
         time_stamp: The original time stamp
-
     Returns:
         the regular time_stamp
     """
@@ -109,12 +117,25 @@ def convert_time_stamp(time_stamp):
 
 
 def convert_address_to_filename(email_address):
+    """
+    convert the format of an email address: e.g. a.abc@abc.com into a_abc_abc_com
+    Args:
+        email_address: the addresses will be converted
+    Returns:
+        None
+
+    """
     email_address = email_address.replace('.', '_')
     email_address = email_address.replace('@', '_')
     return email_address
 
 
 def build_corpus():
+    """
+    Build the corpus for every 10,000 emails
+    Returns:
+        None
+    """
     input_path = r'./data/email_split/'
     output_path = r'./data/email_corpus/'
     for file in os.listdir(input_path):
@@ -132,6 +153,11 @@ def build_corpus():
 
 
 def build_corpus_by_person():
+    """
+    Build corpus by person
+    Returns:
+        None
+    """
     input_path = r'./data/email_split/'
     output_path = r'./data/email_corpus_by_person/'
     email_all = pd.DataFrame()
@@ -160,9 +186,5 @@ def build_corpus_by_person():
             message_id = email[2]
             new_email = {"Message_id": message_id, "From": from_address, "Time_stamp": time_stamp, "Text": text}
             person_email = person_email.append(new_email, ignore_index=True)
-
         name = convert_address_to_filename(name)
         person_email.to_csv(output_path + name + '.csv', index=False)
-
-
-build_corpus_by_person()
