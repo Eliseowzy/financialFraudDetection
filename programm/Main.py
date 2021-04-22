@@ -4,9 +4,11 @@ Author: Zhiyi Wang
 Date: 04-20-2021
 Version: 1.1
 """
-# import DataPreprocess as data_preprocess
+import DataPreprocess as data_preprocess
+
+
 # import WordCloud as word_cloud
-import CommunityDetection as community_detection
+# import CommunityDetection as community_detection
 
 
 def main():
@@ -17,7 +19,8 @@ def main():
     # word_cloud.test()
     # word_cloud.more_test_cloudword(200)
     # word_cloud.output_word_frequencies(200)
-    community_detection.output_gexf_file(graph_type="unweighted", min_degree=100, max_degree=200)
+    # community_detection.output_gexf_file(graph_type="unweighted", min_degree=100, max_degree=200)
+    data_preprocess.build_corpus_by_person()
 
 
 if __name__ == '__main__':
