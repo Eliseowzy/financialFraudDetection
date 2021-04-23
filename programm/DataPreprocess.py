@@ -29,7 +29,6 @@ def split_data(file_name=None):
         file_name: the path of original downloaded from data source
     Returns:
         None
-
     """
     global df_original
     global emails_count
@@ -80,24 +79,23 @@ def clean_email_content(email_content):
         email_content: the string of the raw email content
     Returns:
         cleaned email string
-
     """
-    tmp = str(email_content)
+    new_email_content = str(email_content)
     # remove email address in Text
-    tmp = re.sub(r"[a-zA-Z0-9.\-+_]+@[a-z0-9.\-+_]+\.[a-z]+", '', tmp)
-    tmp = re.sub(r"[a-zA-Z/]+@[a-zA-Z]", " ", tmp)
+    new_email_content = re.sub(r"[a-zA-Z0-9.\-+_]+@[a-z0-9.\-+_]+\.[a-z]+", '', new_email_content)
+    new_email_content = re.sub(r"[a-zA-Z/]+@[a-zA-Z]", " ", new_email_content)
     # remove url in text
-    tmp = re.sub(r'https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+', '', tmp)
-    tmp = re.sub(r'[a-zA-Z]+://[^\s]*', '', tmp)
+    new_email_content = re.sub(r'https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+', '', new_email_content)
+    new_email_content = re.sub(r'[a-zA-Z]+://[^\s]*', '', new_email_content)
 
     # remove punctuation in text
-    text_pattern = re.compile(r'[\s\w]').findall(tmp)
-    tmp = "".join(text_pattern)
-    tmp = re.sub(r"[\d+|_]", "", tmp)
+    text_pattern = re.compile(r'[\s\w]').findall(new_email_content)
+    new_email_content = "".join(text_pattern)
+    new_email_content = re.sub(r"[\d+|_]", "", new_email_content)
 
     # remove redundant space in text
-    tmp = re.sub(r"\s+", " ", tmp)
-    return tmp
+    new_email_content = re.sub(r"\s+", " ", new_email_content)
+    return new_email_content
 
 
 def convert_time_stamp(time_stamp):
@@ -122,7 +120,6 @@ def convert_address_to_filename(email_address):
         email_address: the addresses will be converted
     Returns:
         None
-
     """
     email_address = email_address.replace('.', '_')
     email_address = email_address.replace('@', '_')
@@ -200,7 +197,6 @@ def build_email_corpus_by_selected_person():
     # probable emails' directory
     email_corpus_by_person_directory = './data/email_corpus_by_person/'
     # all probable emails set
-    # email_file_list = [i for i in os.listdir()]
     email_file_list = [i for i in os.listdir(email_corpus_by_person_directory)]
     # for each person
     for _, person in email_book.iterrows():
@@ -236,8 +232,6 @@ def build_email_corpus_by_selected_person():
                              'Time_stamp': time_stamp, 'Text': text, 'Ordner': person[6], 'Status': person[7]}
                 # append to the person's temporary email set
                 person_email_corpus = person_email_corpus.append(new_email, ignore_index=True)
-
-                # print(person_email_corpus)
                 # person_email_corpus.append(new_email, ignore_index=True)
             # load the person's email
             person_email_corpus.to_csv(
