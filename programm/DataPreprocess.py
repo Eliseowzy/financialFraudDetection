@@ -87,12 +87,10 @@ def clean_email_content(email_content):
     # remove url in text
     new_email_content = re.sub(r'https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+', '', new_email_content)
     new_email_content = re.sub(r'[a-zA-Z]+://[^\s]*', '', new_email_content)
-
     # remove punctuation in text
     text_pattern = re.compile(r'[\s\w]').findall(new_email_content)
     new_email_content = "".join(text_pattern)
     new_email_content = re.sub(r"[\d+|_]", "", new_email_content)
-
     # remove redundant space in text
     new_email_content = re.sub(r"\s+", " ", new_email_content)
     return new_email_content
@@ -106,7 +104,6 @@ def convert_time_stamp(time_stamp):
     Returns:
         the regular time_stamp
     """
-
     time_stamp = time_stamp[:-12]
     time_stamp = datetime.datetime.strptime(time_stamp, "%a, %d %b %Y %H:%M:%S")
     # time_stamp = datetime.datetime.strftime(time_stamp, "%a, %d %b %Y %H:%M:%S -0700 (PDT)")
