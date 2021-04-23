@@ -20,7 +20,7 @@ def main():
     # word_cloud.more_test_cloudword(200)
     # word_cloud.output_word_frequencies(200)
     # community_detection.output_gexf_file(graph_type="unweighted", min_degree=100, max_degree=200)
-    data_preprocess.build_corpus_by_person()
+    data_preprocess.build_email_corpus_by_selected_person()
 
 
 if __name__ == '__main__':

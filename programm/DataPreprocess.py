@@ -189,7 +189,7 @@ def build_corpus_by_person():
         person_email.to_csv(output_path + name + '.csv', index=False)
 
 
-def build_selected_person_email_corpus():
+def build_email_corpus_by_selected_person():
     """
     Build email corpus by selected persons
     Returns:
@@ -200,11 +200,13 @@ def build_selected_person_email_corpus():
     # probable emails' directory
     email_corpus_by_person_directory = './data/email_corpus_by_person/'
     # all probable emails set
-    email_list = [i for i in os.listdir()]
+    # email_file_list = [i for i in os.listdir()]
+    email_file_list = [i for i in os.listdir(email_corpus_by_person_directory)]
     # for each person
     for _, person in email_book.iterrows():
         first_name = person[0]
         last_name = person[1]
+        print("{}_{}".format(first_name, last_name))
         # store the person's email temporarily
         person_email_corpus = pd.DataFrame(
             columns=["FirstName", "LastName", "MessageId", "From", "Time_stamp", "Text", "Ordner", "Status"])
@@ -217,7 +219,7 @@ def build_selected_person_email_corpus():
             # get the file name
             email_file = convert_address_to_filename(person_email) + ".csv"
             # if the file not in the probable email set, continue
-            if email_file not in email_list:
+            if email_file not in email_file_list:
                 continue
             # read email as a dataframe
             email_file = pd.read_csv(email_corpus_by_person_directory + email_file)
@@ -234,7 +236,10 @@ def build_selected_person_email_corpus():
                              'Time_stamp': time_stamp, 'Text': text, 'Ordner': person[6], 'Status': person[7]}
                 # append to the person's temporary email set
                 person_email_corpus = person_email_corpus.append(new_email, ignore_index=True)
-        # load the person's email
-        person_email_corpus.to_csv(
-            "./data/email_corpus_by_selected_person/{}".format(first_name + "_" + last_name + '.csv'), index=False)
-        return None
+
+                # print(person_email_corpus)
+                # person_email_corpus.append(new_email, ignore_index=True)
+            # load the person's email
+            person_email_corpus.to_csv(
+                "./data/email_corpus_by_selected_person/{}".format(first_name + "_" + last_name + '.csv'), index=False)
+    return None
