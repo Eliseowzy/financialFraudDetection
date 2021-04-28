@@ -1,3 +1,6 @@
+# Author: Li Zhixin
+# Last Modified Date: 2021-04-27
+
 library(rJava)
 library(Rwordseg)
 library(tm)
@@ -58,9 +61,10 @@ wordInfoGen <- function(text, stopwords, dictionary){
 # ============================================
 # file_list <- list.files("E:\\RProj\\project\\financialFraudDetection\\programm\\data\\test")
 # setwd("E:\\RProj\\project\\financialFraudDetection\\programm\\data\\test")
-file_list <- list.files("E:\\RProj\\project\\financialFraudDetection\\programm\\data\\email_corpus_by_alphabet\\k")
-setwd("E:\\RProj\\project\\financialFraudDetection\\programm\\data\\email_corpus_by_person")
-file_list <- file_list[grepl("^[a-z]", file_list)]
+# file_list <- list.files("E:\\RProj\\project\\financialFraudDetection\\programm\\data\\email_corpus_by_alphabet\\k")
+file_list <- list.files("E:\\RProj\\project\\financialFraudDetection\\programm\\data\\email_corpus_by_selected_person")
+setwd("E:\\RProj\\project\\financialFraudDetection\\programm\\data")
+file_list <- file_list[grepl("^[A-Z]", file_list)]
 file_list
 stopwords <- readLines("E:\\RProj\\project\\financialFraudDetection\\programm\\data\\stopwords\\stopword.txt")
 stopwords = strsplit(x=stopwords, split=", ")
@@ -119,9 +123,14 @@ for (d in 1:length(data_list)){
 match_amt
 email_match <- as.data.frame(cbind(file_list, match_amt))
 email_match$match_amt <- as.integer(email_match$match_amt)
-email_match[order(-email_match$match_amt),]
+final_res <- email_match[order(-email_match$match_amt),]
 email_match
 
+write.csv(final_res, "final_result.csv")
+
+# ============================================
+# =============== Testing Part ===============
+# ============================================
 # Single Test
 file_list[43]
 d <- read.csv(file_list[43])
