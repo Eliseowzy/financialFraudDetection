@@ -59,12 +59,12 @@ wordInfoGen <- function(text, stopwords, dictionary){
 # ============================================
 # ================ Code Start ================
 # ============================================
-# file_list <- list.files("E:\\RProj\\project\\financialFraudDetection\\programm\\data\\test")
-# setwd("E:\\RProj\\project\\financialFraudDetection\\programm\\data\\test")
+file_list <- list.files("E:\\RProj\\project\\financialFraudDetection\\programm\\data\\email_corpus_person")
+setwd("E:\\RProj\\project\\financialFraudDetection\\programm\\data\\email_corpus_person")
 # file_list <- list.files("E:\\RProj\\project\\financialFraudDetection\\programm\\data\\email_corpus_by_alphabet\\k")
-file_list <- list.files("E:\\RProj\\project\\financialFraudDetection\\programm\\data\\email_corpus_by_selected_person")
-setwd("E:\\RProj\\project\\financialFraudDetection\\programm\\data")
-file_list <- file_list[grepl("^[A-Z]", file_list)]
+# file_list <- list.files("E:\\RProj\\project\\financialFraudDetection\\programm\\data\\email_corpus_by_selected_person")
+# file_list <- file_list[grepl("^[A-Z]", file_list)]
+file_list <- file_list[grepl("^[a-z]", file_list)]
 file_list
 stopwords <- readLines("E:\\RProj\\project\\financialFraudDetection\\programm\\data\\stopwords\\stopword.txt")
 stopwords = strsplit(x=stopwords, split=", ")
@@ -86,14 +86,14 @@ for (i in file_list){
 
 length(data_list)
 
-# ============================================
-# ========== Simple Version Testing ==========
-# ============================================
-data <- data.frame(data_list[[1]])
-nrow(data)
-text <- data[1, "Text"]
-res <- wordInfoGen(text)
-res
+# # ============================================
+# # ========== Simple Version Testing ==========
+# # ============================================
+# data <- data.frame(data_list[[1]])
+# nrow(data)
+# text <- data[1, "Text"]
+# res <- wordInfoGen(text)
+# res
 
 # ============================================
 # ========== Person Version Testing ==========
@@ -125,8 +125,10 @@ email_match <- as.data.frame(cbind(file_list, match_amt))
 email_match$match_amt <- as.integer(email_match$match_amt)
 final_res <- email_match[order(-email_match$match_amt),]
 email_match
+final_res
 
-write.csv(final_res, "final_result.csv")
+setwd("E:\\RProj\\project\\financialFraudDetection\\programm\\data")
+write.csv(final_res, "final_result2.csv")
 
 # ============================================
 # =============== Testing Part ===============
